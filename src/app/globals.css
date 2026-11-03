@@ -1,0 +1,142 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme inline {
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-mono-face), ui-monospace, SFMono-Regular, monospace;
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary-soft: var(--primary-soft);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-success: var(--success);
+  --color-success-soft: var(--success-soft);
+  --color-warning: var(--warning);
+  --color-warning-soft: var(--warning-soft);
+  --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
+  --color-info: var(--info);
+  --color-info-soft: var(--info-soft);
+  --color-sidebar: var(--sidebar);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+
+  --radius-sm: 0.375rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+}
+
+/* SmartPay Connect identity: indigo brand colour on cool neutrals. Tenants are
+   presented by name only, so any insurer can be onboarded without design changes. */
+:root {
+  --background: #f6f7f9;
+  --foreground: #12151c;
+  --card: #ffffff;
+  --card-foreground: #12151c;
+  --muted: #eef0f4;
+  --muted-foreground: #5f6675;
+  --border: #e2e5eb;
+  --input: #d6dae2;
+  --ring: #2f4bd0;
+  --primary: #2f4bd0;
+  --primary-foreground: #ffffff;
+  --primary-soft: #eaeefd;
+  --secondary: #1f2a37;
+  --secondary-foreground: #ffffff;
+  --accent: #eef0f8;
+  --accent-foreground: #1e2f8f;
+  --success: #12795a;
+  --success-soft: #e3f4ee;
+  --warning: #a35c00;
+  --warning-soft: #fdf1df;
+  --danger: #b4232f;
+  --danger-soft: #fbe6e8;
+  --info: #0e7490;
+  --info-soft: #e0f3f6;
+  --sidebar: #ffffff;
+  --chart-1: #2f4bd0;
+  --chart-2: #0e7490;
+  --chart-3: #12795a;
+  --chart-4: #c27a1a;
+  --chart-5: #6b4fa0;
+}
+
+.dark {
+  --background: #0f1115;
+  --foreground: #eef0f4;
+  --card: #171a20;
+  --card-foreground: #eef0f4;
+  --muted: #22262e;
+  --muted-foreground: #9aa1ae;
+  --border: #2a2e37;
+  --input: #353a44;
+  --ring: #8ea2ff;
+  --primary: #5b72ee;
+  --primary-foreground: #ffffff;
+  --primary-soft: #1c2347;
+  --secondary: #e6e1e3;
+  --secondary-foreground: #121013;
+  --accent: #1f2433;
+  --accent-foreground: #c7d0ff;
+  --success: #3fbf8f;
+  --success-soft: #133328;
+  --warning: #e6a23c;
+  --warning-soft: #3a2a12;
+  --danger: #ef6b74;
+  --danger-soft: #3c171b;
+  --info: #4cc3d9;
+  --info-soft: #10303a;
+  --sidebar: #13161b;
+  --chart-1: #8ea2ff;
+  --chart-2: #4cc3d9;
+  --chart-3: #3fbf8f;
+  --chart-4: #e6a23c;
+  --chart-5: #a98ad8;
+}
+
+* {
+  border-color: var(--border);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-feature-settings: "cv11", "ss01";
+  -webkit-font-smoothing: antialiased;
+}
+
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  body {
+    background: #fff;
+  }
+}

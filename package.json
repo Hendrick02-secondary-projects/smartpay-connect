@@ -1,0 +1,62 @@
+{
+  "name": "smartpay-connect",
+  "version": "1.1.2",
+  "private": true,
+  "description": "SmartPay Connect V1.0 — B2B digital payment management & reconciliation platform (DEMO / SIMULATED PAYMENTS ONLY)",
+  "engines": {
+    "node": ">=20.9.0"
+  },
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "db:migrate": "tsx scripts/migrate.ts",
+    "db:seed": "tsx --conditions=react-server scripts/seed.ts",
+    "db:reset": "tsx scripts/reset.ts && tsx scripts/migrate.ts && tsx --conditions=react-server scripts/seed.ts",
+    "test": "npm run test:setup-db && vitest run",
+    "test:unit": "vitest run tests/unit",
+    "test:integration": "npm run test:setup-db && vitest run tests/integration",
+    "check": "npm run typecheck && npm run lint && npm run test:sql && npm run test && npm run build",
+    "test:setup-db": "tsx scripts/test-db.ts",
+    "test:sql": "bash scripts/sql-tests.sh"
+  },
+  "dependencies": {
+    "@radix-ui/react-dialog": "^1.1.14",
+    "@radix-ui/react-label": "^2.1.7",
+    "@radix-ui/react-slot": "^1.2.3",
+    "bcryptjs": "^3.0.2",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "drizzle-orm": "^0.44.2",
+    "exceljs": "^4.4.0",
+    "lucide-react": "^0.525.0",
+    "next": "^15.4.0",
+    "pg": "^8.16.3",
+    "qrcode": "^1.5.4",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "recharts": "^3.1.0",
+    "server-only": "^0.0.1",
+    "tailwind-merge": "^3.3.1",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3.3.1",
+    "@tailwindcss/postcss": "^4.1.11",
+    "@types/node": "^22.16.0",
+    "@types/pg": "^8.15.4",
+    "@types/qrcode": "^1.5.5",
+    "@types/react": "^19.1.8",
+    "@types/react-dom": "^19.1.6",
+    "dotenv": "^17.2.0",
+    "drizzle-kit": "^0.31.4",
+    "eslint": "^9.31.0",
+    "eslint-config-next": "^15.4.0",
+    "tailwindcss": "^4.1.11",
+    "tsx": "^4.20.3",
+    "typescript": "^5.8.3",
+    "vitest": "^3.2.4"
+  }
+}
