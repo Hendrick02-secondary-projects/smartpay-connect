@@ -69,3 +69,19 @@ O código que depende de `next`, `drizzle-orm`, `pg` e `react` foi escrito sem c
 | Migrações 0000→0002 numa transacção sobre base vazia | ✅ 23 tabelas; a 0002 não altera nada quando não há dados antigos |
 | Diff com a versão anterior | ✅ as únicas linhas de código alteradas são identidade, rotas, prefixo das referências, título do portal lido da base de dados e URL do QR (mesmo resultado) |
 | Typecheck completo · Lint · Integração · **Build** | ⛔ **não executados**: npm continua bloqueado nesta sessão |
+
+
+## 4. V1.1.3 — correcção do build (2026-11-03)
+
+O npm continuou bloqueado no ambiente de desenvolvimento, por isso `npx tsc --noEmit`, `npm run lint` e `npm run build` **não foram executados com as dependências instaladas**. Foi feito o seguinte:
+
+| Verificação | Como | Resultado |
+|---|---|---|
+| Tipos (equivalente a `tsc --noEmit` / fase de tipos do `next build`) | TypeScript **5.9.3** (a versão que `^5.8.3` instala) sobre todo o projecto (src, tests, scripts, configs), com os tipos reais clonados do GitHub: Recharts 3.10.1, drizzle-orm 0.44.7, @types/react 19, @types/pg, @types/qrcode, exceljs 4.4, bcryptjs 3, lucide 0.525 (nomes dos ícones), metadados do Next 15.5. Declarações mínimas escritas à mão só para next/server, next/navigation, next/headers, next/link, next/font, @radix-ui, vitest e drizzle-kit | Antes: 4 erros reais, incluindo o `charts.tsx(55,49)` reportado pela Vercel, reproduzido exactamente. Depois: **0 erros** |
+| Controlo do ambiente de tipos | Ficheiro com 4 erros plantados (drizzle, Recharts, Link, NextResponse) | Os 4 detectados |
+| Lint (regras de nível error do next/core-web-vitals + next/typescript + overrides do projecto) | Emulação sobre a AST do TS 5.9: no-unused-vars (incl. parâmetros de `catch`), no-explicit-any, ban-ts-comment, no-require-imports, prefer-const, no-unused-expressions, no-empty-object-type, react/no-unescaped-entities, jsx-key, display-name, jsx-no-comment-textnodes, rules-of-hooks, no-html-link-for-pages. O próprio verificador foi validado com 12 violações plantadas | 1 erro (`scripts/seed.ts`), corrigido. Depois: 0 |
+| Convenções do `next build` | Exports permitidos em page/layout/route, `"use server"` só com funções async, hooks e handlers só em `"use client"`, componentes cliente sem imports de servidor, páginas pré-renderizadas sem acesso à BD | 0 problemas |
+| CSS | `globals.css` compilado com Tailwind 4 | OK |
+| Unitários / SQL | harness local e `npm run test:sql` | 71/71 e 89/89 |
+
+**Por executar:** `npm run lint` com o eslint-config-next real, `npm run build` e os testes de integração (Vitest + PostgreSQL).

@@ -15,22 +15,49 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+import type { ReactNode } from "react";
 import { formatMzn, formatMznCompact } from "@/lib/money";
 
 const C = ["var(--chart-1)", "var(--chart-2)", "var(--chart-3)", "var(--chart-4)", "var(--chart-5)"];
 const axis = { fontSize: 11, fill: "var(--muted-foreground)" };
 const grid = { stroke: "var(--border)", strokeDasharray: "3 3", vertical: false };
 
-function TooltipBox({ active, payload, label, money }: { active?: boolean; payload?: { name?: string; value?: number; color?: string }[]; label?: string; money?: boolean }) {
+/**
+ * Props that Recharts injects (React.cloneElement) into a custom `content` element. Structural types
+ * matching Recharts 3 (`ValueType`/`Payload` are not exported by every 3.x release): an entry's
+ * `value` may be undefined, `label` and the result of `labelFormatter` are ReactNode.
+ * `labelFormatter` is forwarded by Recharts, so it is applied here (a custom `content` replaces the
+ * default content that would otherwise apply it).
+ */
+type TooltipValueType = number | string | ReadonlyArray<number | string>;
+type TooltipPayloadEntry = { name?: number | string; value?: TooltipValueType; color?: string; dataKey?: unknown };
+type TooltipBoxProps = {
+  active?: boolean;
+  payload?: ReadonlyArray<TooltipPayloadEntry>;
+  label?: ReactNode;
+  labelFormatter?: (label: ReactNode, payload: ReadonlyArray<TooltipPayloadEntry>) => ReactNode;
+  money?: boolean;
+};
+
+function formatTooltipValue(value: TooltipValueType | undefined, money: boolean): string {
+  if (value === undefined) return formatTooltipValue(0, money); // same fallback as before (value ?? 0)
+  if (Array.isArray(value)) return value.map((v) => formatTooltipValue(v, money)).join(" – ");
+  const n = typeof value === "number" ? value : Number(value);
+  if (!Number.isFinite(n)) return String(value);
+  return money ? formatMzn(n) : n.toLocaleString("pt-MZ");
+}
+
+function TooltipBox({ active, payload, label, labelFormatter, money = false }: TooltipBoxProps) {
   if (!active || !payload?.length) return null;
+  const shownLabel = labelFormatter ? labelFormatter(label, payload) : label;
   return (
     <div className="rounded-lg border bg-card px-3 py-2 text-xs shadow-lg">
-      {label && <p className="mb-1 font-medium">{label}</p>}
-      {payload.map((p) => (
-        <p key={p.name} className="flex items-center gap-2 tabular">
+      {shownLabel !== undefined && shownLabel !== null && shownLabel !== "" && <p className="mb-1 font-medium">{shownLabel}</p>}
+      {payload.map((p, i) => (
+        <p key={`${String(p.dataKey ?? p.name ?? "")}-${i}`} className="flex items-center gap-2 tabular">
           <span className="size-2 rounded-full" style={{ background: p.color }} />
           <span className="text-muted-foreground">{p.name}:</span>
-          <span className="font-medium">{money ? formatMzn(Number(p.value ?? 0)) : (p.value ?? 0).toLocaleString("pt-MZ")}</span>
+          <span className="font-medium">{formatTooltipValue(p.value, money)}</span>
         </p>
       ))}
     </div>
@@ -38,6 +65,8 @@ function TooltipBox({ active, payload, label, money }: { active?: boolean; paylo
 }
 
 const shortDay = (d: string) => `${d.slice(8, 10)}/${d.slice(5, 7)}`;
+/** Tooltip `labelFormatter`: Recharts passes the label as ReactNode (the category, here an ISO day). */
+const shortDayLabel = (label: ReactNode): ReactNode => (typeof label === "string" ? shortDay(label) : label);
 
 export function VolumeChart({ data }: { data: { day: string; amountMinor: number; count: number }[] }) {
   return (
@@ -52,7 +81,7 @@ export function VolumeChart({ data }: { data: { day: string; amountMinor: number
         <CartesianGrid {...grid} />
         <XAxis dataKey="day" tickFormatter={shortDay} tick={axis} tickLine={false} axisLine={false} minTickGap={24} />
         <YAxis tickFormatter={(v: number) => formatMznCompact(v).replace(" MZN", "")} tick={axis} tickLine={false} axisLine={false} width={58} />
-        <Tooltip content={<TooltipBox money />} labelFormatter={shortDay} />
+        <Tooltip content={<TooltipBox money />} labelFormatter={shortDayLabel} />
         <Area type="monotone" dataKey="amountMinor" name="Valor pago" stroke="var(--chart-1)" strokeWidth={2} fill="url(#vol)" />
       </AreaChart>
     </ResponsiveContainer>

@@ -292,7 +292,7 @@ export function PaymentFlow({ org, accounts }: { org: { slug: string; portalName
                 <ReviewRow label="Segurado" value={customerName} />
                 <ReviewRow label="Telemóvel" value={formatPhone(normalizeMozPhone(customerPhone) ?? customerPhone)} />
                 <ReviewRow label="Conta de destino" value={`${account.bankName} · ${account.accountNumberMasked}`} sub={account.accountName} />
-                <ReviewRow label="Método" value={METHOD_LABELS[method]} />
+                <ReviewRow label="Método" value={METHOD_LABELS[method] ?? method} />
                 <div className="px-4 py-3">
                   <p className="mb-2 text-xs text-muted-foreground">Notas de débito</p>
                   <ul className="space-y-1.5">

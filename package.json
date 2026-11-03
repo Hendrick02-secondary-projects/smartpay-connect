@@ -1,6 +1,6 @@
 {
   "name": "smartpay-connect",
-  "version": "1.1.2",
+  "version": "1.1.3",
   "private": true,
   "description": "SmartPay Connect V1.0 — B2B digital payment management & reconciliation platform (DEMO / SIMULATED PAYMENTS ONLY)",
   "engines": {

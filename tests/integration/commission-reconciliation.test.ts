@@ -137,7 +137,7 @@ describe.skipIf(!hasDb)("reconciliation (integration)", () => {
     // different file, same settlement reference => duplicate_settlement, payment not double-counted
     const file2 = Buffer.concat([file, Buffer.from("\n")]);
     const r2 = await importSettlement(getDb(), { ...input, fileHash: fileHash(file2) }, { userId: t.financeUserId });
-    expect(r2.counts.duplicate_settlement).toBe(1);
+    expect(r2.counts?.duplicate_settlement).toBe(1); // counts is null only when import is deferred (provider receipt)
   });
 });
 
@@ -153,7 +153,7 @@ describe.skipIf(!hasDb)("tenant isolation (integration)", () => {
     const parsed = await parseSettlementFile("x.csv", file);
     if (!parsed.ok) throw new Error("parse failed");
     const r = await importSettlement(getDb(), { organizationId: a.orgId, source: "file_import", scenario: "file", fileName: "x.csv", fileHash: fileHash(file), rows: parsed.rows }, { userId: a.financeUserId });
-    expect(r.counts.unmatched).toBe(1);
+    expect(r.counts?.unmatched).toBe(1);
     const [after] = await getDb().select().from(s.paymentIntents).where(eq(s.paymentIntents.id, pb.id));
     expect(after!.reconciliationStatus).toBe("unreconciled");
   });

@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.1.3 — 2026-11-03 · Correcção do build (TypeScript)
+
+### Corrigido
+- `src/components/charts/charts.tsx`: o `labelFormatter` do Tooltip recebia `(d: string) => string`, mas no Recharts 3 a etiqueta é `ReactNode`, o que fazia falhar o build na Vercel (`charts.tsx:55:49`). Passa a usar `shortDayLabel(label: ReactNode): ReactNode`. O `TooltipBox` personalizado passa a aplicar o `labelFormatter` que o Recharts lhe entrega (antes ignorava-o e o tooltip do gráfico de volume mostrava a data ISO sem formato) e tem tipos estruturais compatíveis com qualquer Recharts 3.x (o valor de cada série pode ser `undefined` ou um array).
+- `src/components/payment/payment-flow.tsx`: `METHOD_LABELS[method]` é `string | undefined` com `noUncheckedIndexedAccess`. Usa o mesmo fallback que o resto da aplicação (`?? method`).
+- `tests/integration/commission-reconciliation.test.ts`: `importSettlement(...).counts` é `null` quando a liquidação fica por reconciliar. As asserções usam `counts?.`, por isso continuam a falhar se não houver contagens.
+- `scripts/seed.ts`: a variável `waiting` não era usada, o que é um erro de lint (`no-unused-vars` está como error). Passa a ser mostrada no resumo do seed.
+
+Sem alterações à lógica financeira, autenticação, pagamentos, reconciliação ou comissões.
+
 ## 1.1.2 — 2026-11-03 · Nome do módulo de alocação
 
 ### Alterado

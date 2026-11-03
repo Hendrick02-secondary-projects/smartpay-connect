@@ -565,6 +565,7 @@ async function main() {
   const count = seeded.length + 1;
   console.info(`✓ Seeded ${count} simulated payments, ${batchNo + 1} settlement batches, ${invNo + 1} invoices.`);
   console.info(`  Showcase: ${intent.reference} — 10 000,00 MZN → commission ${inv.amountMinor / 100} MZN accrued, invoiced and collected.`);
+  if (waiting) console.info(`  Settlement waiting for Finance: ${waiting.batch.batchReference} (${waiting.payments} payments, 1 aggregated credit).`);
   console.info("  Finance login: finance@demo-insurance.test  (password: SEED_FINANCE_PASSWORD)");
   console.info("  Owner login:   owner@smartpay-demo.test    (password: SEED_OWNER_PASSWORD) at /owner/login");
 }
